@@ -27,7 +27,7 @@ void kmain(void);			/* Kernel entry point */
 
 /* Functions for printing text to video memory */
 
-void kcls(char *vidptr);	/* Clear video memory */
+void kcls(char **vidptr);	/* Clear video memory */
 
 /* Returns a pointer to the next available character for writing */
 void kprint(char **vidptr, const char *str, byte color);	/* Write string to video memory */

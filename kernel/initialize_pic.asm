@@ -4,6 +4,8 @@ section .text
 
 ; http://www.brokenthorn.com/Resources/OSDevPic.html
 _initialize_pic:
+  push eax
+
 ; Setup to initialize the primary PIC. Send ICW 1
   mov	al, 0x11
   out	0x20, al
@@ -41,4 +43,5 @@ _initialize_pic:
   out	0x21, al
   out	0xA1, al
   
+  pop eax
   ret

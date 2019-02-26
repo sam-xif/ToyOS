@@ -23,7 +23,7 @@ void kmain(void)
 	vidptr = (char*)VIDMEMADDR; 	//video mem begins at 0xb8000 for multicolor. begins at 0xb0000 for monochrome.
 	
 	// Clear screen
-	kcls(vidptr);
+	kcls(&vidptr);
 	
 	// Print string
 	kprintn(&vidptr, kernel_loaded, 8, LIGHTGREEN);
@@ -82,8 +82,8 @@ void kmain(void)
 	idt_create_entry(&divide_by_zero, &dbz_wrapper, 0x8, TRAP_GATE, 0);
     // Interrupt gates are in response to hardware events 
     // https://stackoverflow.com/questions/3425085/the-difference-between-call-gate-interrupt-gate-trap-gate
-	idt_create_entry(&timer, &timer_interrupt_wrapper, 0x8, INTERRUPT_GATE, 0);
-	idt_create_entry(&kybrd, &kybrd_interrupt_wrapper, 0x8, INTERRUPT_GATE, 0);
+	idt_create_entry(&timer, &timer_interrupt_wrapper, 0x8, TRAP_GATE, 0);
+	idt_create_entry(&kybrd, &kybrd_interrupt_wrapper, 0x8, TRAP_GATE, 0);
 	
 	
 	idtptr[0] = divide_by_zero;
@@ -104,18 +104,22 @@ void kmain(void)
 }
 
 /* Clear video memory with space characters */
-void kcls(char *vidptr)
+void kcls(char **vidptr)
 {
+    // Reset vid ptr
+    *(vidptr) = (char*)VIDMEMADDR;
+    
 	uint32 j = 0;
 	/* this loops clears the screen
 	* there are 25 lines each of 80 columns; each element takes 2 bytes */
 	while(j < 80 * 25 * 2) {
 		/* blank character */
-		vidptr[j] = ' ';
+		(*vidptr)[j] = ' ';
 		/* attribute-byte - light grey on black screen */
-		vidptr[j+1] = LIGHTGREY; 		
+		(*vidptr)[j+1] = LIGHTGREY; 		
 		j = j + 2;
 	}
+    
 	return;
 }
 
@@ -162,7 +166,7 @@ int kprintn(char **vidptr, const char *str, uint32 num, byte color)
 	}
 	
 	// Advance video pointer
-	*(vidptr) += num * 2;
+	(*vidptr) += num * 2;
 	
 	// Return number of characters printed
 	return num;
