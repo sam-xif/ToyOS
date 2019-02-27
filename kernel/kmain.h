@@ -42,6 +42,9 @@ void knewline(byte **vidptr);
 uint32 kstrlen(const char *str); 
 
 /* NOT IMPLEMENTED */
-char * itoa(int value, char *str, int base); /* integer to ASCII */
+int itoa(int value, char *str, int base); /* integer to ASCII */
+
+int nibble_to_hex(byte value, char *str);
+int byte_to_hex(byte value, char *str);
 
 #endif /* _KMAIN_H */

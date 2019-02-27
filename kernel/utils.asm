@@ -10,7 +10,9 @@ _readport:
   push ebp
   mov ebp, esp
   
-  mov eax, 0
+  xor eax, eax
+  mov edx, eax
+  
   mov edx, [ebp + 8]
   in al, dx
   
@@ -21,6 +23,10 @@ _readport:
 _writeport:
   push ebp
   mov ebp, esp
+  
+  ; Zero out the registers that we are going to use
+  xor edx, edx
+  mov eax, edx
   
   mov edx, [ebp + 8] ; port
   mov byte al, [ebp + 12] ; cmd

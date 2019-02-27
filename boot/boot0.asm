@@ -136,7 +136,7 @@ stage_2:
   mov es, ax 
   xor ax, ax
   mov bx, ax ; load kernel to address 0xF001:0xFFF0 in memory
-  mov al, 0x6 ; read 6 sectors 
+  mov al, 0x8 ; read 8 sectors 
   mov ch, 0x0
   mov cl, 0x4 ; start at fourth sector
   mov dh, 0x0

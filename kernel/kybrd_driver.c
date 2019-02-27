@@ -2,6 +2,7 @@
 
 #include "kybrd_driver.h"
 #include "utils.h"
+#include "kmain.h"
 
 // Sets keyboard LEDS
 void kybrd_set_leds(byte leds) 
@@ -16,7 +17,7 @@ void kybrd_set_leds(byte leds)
 void kybrd_ctrl_wait_write() 
 {
     while (TRUE) {
-        if (readport(KYBRD_CTRL_PORT) & 0x2 == 0) break;
+        if ((readport(KYBRD_CTRL_PORT) & 0x2) == 0) break;
     }
 }
 
@@ -24,13 +25,13 @@ void kybrd_ctrl_wait_write()
 void kybrd_ctrl_wait_read()
 {
     while (TRUE) {
-        if (readport(KYBRD_CTRL_PORT) & 0x1 == 1) break;
+        if ((readport(KYBRD_CTRL_PORT) & 0x1) == 1) break;
     }
 }
 
 byte kybrd_enc_read()
 {
-    return readport(KYBRD_CTRL_PORT);
+    return readport(KYBRD_ENC_PORT);
 }
 
 // Enables the keyboard and enables keyboard interrupts
@@ -63,10 +64,28 @@ int kybrd_get_scanset()
     kybrd_ctrl_wait_write();
     writeport(KYBRD_CTRL_PORT, 0xF0);
     
+    byte cmd_response = readport(KYBRD_ENC_PORT);
+    if (cmd_response == 0xFA) {
+        kprint(&vidptr, "GET SCANSET COMMAND ACKNOWLEDGED", LIGHTGREY);
+        knewline(&vidptr);
+    }
+    
     kybrd_ctrl_wait_write();
     // Writing Bit 0 outputs the current scan set to port 0x60 (encoder port)
-    writeport(KYBRD_CTRL_PORT, 0x01);
+    writeport(KYBRD_ENC_PORT, 0x01);
     
-    kybrd_ctrl_wait_read();
-    return readport(KYBRD_ENC_PORT);
+    byte response1 = readport(KYBRD_ENC_PORT);
+    
+    // 0xFA is the acknowledged code
+    if (response1 == 0xFA) {
+        kybrd_ctrl_wait_read();
+        return readport(KYBRD_ENC_PORT);
+    }
+    // 0xFE is the resend code
+    else if (response1 == 0xFE) {
+        return -1; // -1 is resend error; TODO: come up with standard error codes
+    }
+    else {
+        return -2; // Unknown code is error -2
+    }
 }

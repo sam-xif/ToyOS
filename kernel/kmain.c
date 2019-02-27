@@ -95,11 +95,25 @@ void kmain(void)
 	// Initialize the PIC microcontroller and enable interrupts
 	initialize_pic();
 	enable_interrupts();
-	
+    
+    
     // Enable the keyboard and try setting LEDs
 	kybrd_enable();
-	kybrd_set_leds(7);
-	
+    kybrd_set_leds(7);
+    
+    const char *getting_scanset_msg = "getting keyboard scanset";
+    knewline(&vidptr);
+    kprint(&vidptr, getting_scanset_msg, LIGHTGREEN);
+    knewline(&vidptr);
+    
+    char scanset_str[2];
+    int scanset_byte = kybrd_get_scanset();
+    if (scanset_byte >= 0) {
+        byte_to_hex((byte)scanset_byte, &scanset_str);
+        kprintn(&vidptr, scanset_str, 2, LIGHTGREEN);
+    } else {
+        kprint(&vidptr, "Error white getting scanset", LIGHTGREEN);
+    }
 	
 	return;
 }
@@ -193,4 +207,45 @@ uint32 kstrlen(const char *str)
 	while (*(str++) != '\0') ++i;
 	
 	return i;
+}
+
+/* Converts a value from 0-15 to a hexadecimal string */
+int nibble_to_hex(byte value, char *str) 
+{
+    switch (value) {
+        case 0: str[0] = '0'; break;
+        case 1: str[0] = '1'; break;
+        case 2: str[0] = '2'; break;
+        case 3: str[0] = '3'; break;
+        case 4: str[0] = '4'; break;
+        case 5: str[0] = '5'; break;
+        case 6: str[0] = '6'; break;
+        case 7: str[0] = '7'; break;
+        case 8: str[0] = '8'; break;
+        case 9: str[0] = '9'; break;
+        case 10: str[0] = 'A'; break;
+        case 11: str[0] = 'B'; break;
+        case 12: str[0] = 'C'; break;
+        case 13: str[0] = 'D'; break;
+        case 14: str[0] = 'E'; break;
+        case 15: str[0] = 'F'; break;
+        default: return -1;
+    }
+    return 0;
+}
+
+/* Converts one byte to its hexadecimal representation */
+int byte_to_hex(byte value, char *str)
+{
+    if (nibble_to_hex(value & 0x0F, str + sizeof(char)) == -1) {
+        kprint(&vidptr, "ERROR", LIGHTGREEN); // TODO: Handle errors better
+        return -1;
+    }
+    
+    if (nibble_to_hex((value >> 4) & 0x0F, str) == -1) {
+        kprint(&vidptr, "ERROR", LIGHTGREEN);
+        return -1;
+    }
+    
+    return 0;
 }
