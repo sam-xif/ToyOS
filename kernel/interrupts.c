@@ -23,13 +23,8 @@ void timer_interrupt(struct regs r)
 }
 
 void kybrd_interrupt(struct regs r)
-{
-	const char *err = "keyboard pressed";
-    
+{    
     // Read from keyboard encoder
     byte enc_return_code = kybrd_enc_read();
-    
-	
-	knewline(&vidptr);
-	kprint(&vidptr, err, LIGHTGREY);
+    kprintn(&vidptr, (const char *)enc_return_code, 1, LIGHTGREY);
 }

@@ -5,7 +5,7 @@ global _writeport
 
 section .text
 
-; byte readport()
+; byte readport(byte port)
 _readport:
   push ebp
   mov ebp, esp

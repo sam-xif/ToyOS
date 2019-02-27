@@ -146,13 +146,11 @@ void kprint(byte **vidptr, const char *str, byte color)
 	return;
 }
 
+/* Write n characters from the pointer str to video memory.
+ * WARNING: THIS FUNCTION DOES NOT PERFORM BOUNDS CHECKING ON STR
+ *  IT WILL PRINT GARBAGE DATA IF YOU LET IT */
 int kprintn(byte **vidptr, const char *str, uint32 num, byte color)
-{
-	// Check if the characters to print is greater than the length of the string, and return -1 if so.
-	if (num > kstrlen(str)) {
-		return -1;
-	}
-	
+{	
 	uint32 i = 0;
 	uint32 j = 0;
 	
