@@ -6,7 +6,7 @@
 // Sets keyboard LEDS
 void kybrd_set_leds(byte leds) 
 {
-    kybrd_wait_write();
+    kybrd_ctrl_wait_write();
     
     writeport(KYBRD_ENC_PORT, 0xed); // 0xed is set leds command
     writeport(KYBRD_ENC_PORT, leds);

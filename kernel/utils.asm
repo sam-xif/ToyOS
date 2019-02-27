@@ -11,8 +11,8 @@ _readport:
   mov ebp, esp
   
   mov eax, 0
-  mov ecx, [ebp + 8]
-  in al, cl
+  mov edx, [ebp + 8]
+  in al, dx
   
   pop ebp
   ret
@@ -22,10 +22,10 @@ _writeport:
   push ebp
   mov ebp, esp
   
-  mov byte al, [ebp + 8] ; port
-  mov byte ah, [ebp + 12] ; cmd
+  mov edx, [ebp + 8] ; port
+  mov byte al, [ebp + 12] ; cmd
   
-  out al, ah
+  out dx, al
   
   pop ebp
   ret
