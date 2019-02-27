@@ -5,6 +5,8 @@
 #ifndef _IDT_H
 #define _IDT_H
 
+#include "inttypes.h"
+
 #define IDTLOC 0x0
 #define INTERRUPT_GATE 	14
 #define TRAP_GATE 		15

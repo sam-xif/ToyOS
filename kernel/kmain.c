@@ -2,13 +2,13 @@
  * kmain.c 
  */
 
-#include "inttype.h"
 #include "kmain.h"
 #include "gdt.h"
 #include "idt.h"
 #include "interrupts.h"
+#include "kybrd_driver.h"
 
-char *vidptr;
+byte *vidptr;
 
 
 // TODO: Test for multicolor vs monochrome either here or in bootloader
@@ -96,7 +96,8 @@ void kmain(void)
 	initialize_pic();
 	enable_interrupts();
 	
-	kybrd_enable_interrupt();
+    // Enable the keyboard and try setting LEDs
+	kybrd_enable();
 	kybrd_set_leds(7);
 	
 	
@@ -104,7 +105,7 @@ void kmain(void)
 }
 
 /* Clear video memory with space characters */
-void kcls(char **vidptr)
+void kcls(byte **vidptr)
 {
     // Reset vid ptr
     *(vidptr) = (char*)VIDMEMADDR;
@@ -124,7 +125,7 @@ void kcls(char **vidptr)
 }
 
 /* Write string to video memory */
-void kprint(char **vidptr, const char *str, byte color)
+void kprint(byte **vidptr, const char *str, byte color)
 {
 	uint32 i = 0;
 	uint32 j = 0;
@@ -145,7 +146,7 @@ void kprint(char **vidptr, const char *str, byte color)
 	return;
 }
 
-int kprintn(char **vidptr, const char *str, uint32 num, byte color)
+int kprintn(byte **vidptr, const char *str, uint32 num, byte color)
 {
 	// Check if the characters to print is greater than the length of the string, and return -1 if so.
 	if (num > kstrlen(str)) {
@@ -173,7 +174,7 @@ int kprintn(char **vidptr, const char *str, uint32 num, byte color)
 }
 
 /* Advance pointer to next line */
-void knewline(char **vidptr)
+void knewline(byte **vidptr)
 {
 	/* 
 	 * Video mem starts at 0xb8000
@@ -182,7 +183,7 @@ void knewline(char **vidptr)
 	uint32 i = 0;
 	
 	while ((80 * 2 * i) <= (*vidptr - 0xb8000)) ++i;
-	(*vidptr) += (char *)(80 * 2 * i) - (*vidptr - 0xb8000);
+	(*vidptr) += (byte *)(80 * 2 * i) - (*vidptr - 0xb8000);
 	
 	return;
 }

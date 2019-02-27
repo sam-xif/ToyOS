@@ -5,6 +5,8 @@
 #ifndef _INTERRUPTS_H 
 #define _INTERRUPTS_H
 
+#include "inttypes.h"
+
 extern void initialize_pic(void);
 extern void generate_interrupt(uint32 interrupt);
 

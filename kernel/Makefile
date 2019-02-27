@@ -16,10 +16,10 @@ OBJCOPY=objcopy
 KENTRY=kernel_entry
 
 # Object files produced by c source
-COBJ=kmain.o gdt.o idt.o interrupts.o
+COBJ=kmain.o gdt.o idt.o interrupts.o kybrd_driver.o
 
 # object files produced by assembly
-ASMOBJ=$(KENTRY).obj exception_wrappers.obj initialize_pic.obj hardware_int_wrappers.obj keyboard_driver.obj
+ASMOBJ=$(KENTRY).obj exception_wrappers.obj initialize_pic.obj hardware_int_wrappers.obj utils.obj
 
 kernel.bin: $(COBJ) $(ASMOBJ) link.ld
 	$(LD) $(LDFLAGS) kernel.tmp $(COBJ) $(ASMOBJ)

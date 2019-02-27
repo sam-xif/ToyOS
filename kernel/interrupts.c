@@ -1,8 +1,7 @@
 /*
  * interrupts.c
  */
- 
-#include "inttype.h"
+
 #include "kmain.h"
 #include "interrupts.h"
 
@@ -28,7 +27,7 @@ void kybrd_interrupt(struct regs r)
 	const char *err = "keyboard pressed";
     
     // Read from keyboard encoder
-    char enc_return_code = kybrd_enc_read();
+    byte enc_return_code = kybrd_enc_read();
     
 	
 	knewline(&vidptr);

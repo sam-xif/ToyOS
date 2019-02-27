@@ -6,6 +6,8 @@
 #ifndef _GDT_H
 #define _GDT_H
 
+#include "inttypes.h"
+
 #define GDTLOC 0x800
 
 /* Defined in kernel_entry.asm */

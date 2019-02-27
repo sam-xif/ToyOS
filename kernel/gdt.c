@@ -2,7 +2,6 @@
  * gdt.c
  */
  
-#include "inttype.h"
 #include "gdt.h"
 
 /* Fill a gdt_entry struct with the specified values */

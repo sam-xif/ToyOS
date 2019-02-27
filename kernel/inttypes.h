@@ -1,15 +1,15 @@
 /*
- * inttype.h
+ * inttypes.h
  */
  
  
-#ifndef _INTTYPE_H
-#define _INTTYPE_H
+#ifndef _INTTYPES_H
+#define _INTTYPES_H
 
 #define TRUE 1
 #define FALSE 0
 
-/* Useful typedefs */
+/* Integer type typedefs */
 typedef unsigned char byte;
 typedef unsigned char uint8;
 typedef unsigned short uint16;

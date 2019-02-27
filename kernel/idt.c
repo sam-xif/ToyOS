@@ -2,7 +2,6 @@
  * idt.c
  */
 
-#include "inttype.h"
 #include "idt.h"
 
 void idt_create_entry(	struct idt_entry *entry,

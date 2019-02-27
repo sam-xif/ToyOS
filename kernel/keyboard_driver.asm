@@ -28,7 +28,7 @@ kybrd_wait_write_loop:
 
 _kybrd_read:
   mov eax, 0 ; clear return register
-  in al, 0x64
+  in al, 0x60
   ret
   
 _kybrd_wait_read:
