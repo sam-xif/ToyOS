@@ -30,7 +30,7 @@ void kybrd_ctrl_wait_read()
 
 byte kybrd_enc_read()
 {
-    return readport(KYBRD_ENC_PORT);
+    return readport(KYBRD_CTRL_PORT);
 }
 
 // Enables the keyboard and enables keyboard interrupts
@@ -55,4 +55,18 @@ void kybrd_enable()
     
     kybrd_ctrl_wait_write();
     writeport(KYBRD_ENC_PORT, ctrl_cmd_byte);
+}
+
+// Gets the current scan set that the keyboard is using 
+int kybrd_get_scanset()
+{
+    kybrd_ctrl_wait_write();
+    writeport(KYBRD_CTRL_PORT, 0xF0);
+    
+    kybrd_ctrl_wait_write();
+    // Writing Bit 0 outputs the current scan set to port 0x60 (encoder port)
+    writeport(KYBRD_CTRL_PORT, 0x01);
+    
+    kybrd_ctrl_wait_read();
+    return readport(KYBRD_ENC_PORT);
 }

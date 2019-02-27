@@ -25,6 +25,7 @@ void timer_interrupt(struct regs r)
 void kybrd_interrupt(struct regs r)
 {    
     // Read from keyboard encoder
+    kybrd_ctrl_wait_read();
     byte enc_return_code = kybrd_enc_read();
     kprintn(&vidptr, (const char *)enc_return_code, 1, LIGHTGREY);
 }
