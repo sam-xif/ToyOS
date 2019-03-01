@@ -72,10 +72,9 @@ int kybrd_get_scanset()
     
     kybrd_ctrl_wait_write();
     // Writing Bit 0 outputs the current scan set to port 0x60 (encoder port)
-    writeport(KYBRD_ENC_PORT, 0x01);
+    writeport(KYBRD_ENC_PORT, 0x00);
     
     byte response1 = readport(KYBRD_ENC_PORT);
-    
     // 0xFA is the acknowledged code
     if (response1 == 0xFA) {
         kybrd_ctrl_wait_read();
