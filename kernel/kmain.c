@@ -24,7 +24,7 @@ void kmain(void)
 	
 	// Clear screen
 	kcls(&vidptr);
-	
+
 	// Print string
 	kprintn(&vidptr, kernel_loaded, 8, LIGHTGREEN);
 	kprintn(&vidptr, kernel_loaded + 8, kstrlen(kernel_loaded) - 8, LIGHTGREY);
@@ -109,8 +109,12 @@ void kmain(void)
     char scanset_str[2];
     int scanset_byte = kybrd_get_scanset();
     if (scanset_byte >= 0) {
+        knewline(&vidptr);
+        kprint(&vidptr, "Byte: ", LIGHTGREEN);
         byte_to_hex((byte)scanset_byte, &scanset_str);
         kprintn(&vidptr, scanset_str, 2, LIGHTGREEN);
+    } else if (scanset_byte == -1) {
+        kprint(&vidptr, "Resend requested", LIGHTGREEN);
     } else {
         kprint(&vidptr, "Error white getting scanset", LIGHTGREEN);
     }
@@ -129,9 +133,9 @@ void kcls(byte **vidptr)
 	* there are 25 lines each of 80 columns; each element takes 2 bytes */
 	while(j < 80 * 25 * 2) {
 		/* blank character */
-		(*vidptr)[j] = ' ';
+		(*vidptr)[j] = '\0';//' ';
 		/* attribute-byte - light grey on black screen */
-		(*vidptr)[j+1] = LIGHTGREY; 		
+		(*vidptr)[j+1] = '\0';//LIGHTGREY; 		
 		j = j + 2;
 	}
     
@@ -193,6 +197,8 @@ void knewline(byte **vidptr)
 	 * size of 1 row = 80 * 2, because 80 chars per row and 2 bytes per char.
 	 */
 	uint32 i = 0;
+
+    //while ((int)(*vidptr - VIDMEMADDR) % (80 * 2)) (*vidptr)++;
 	
 	while ((80 * 2 * i) <= (*vidptr - 0xb8000)) ++i;
 	(*vidptr) += (byte *)(80 * 2 * i) - (*vidptr - 0xb8000);

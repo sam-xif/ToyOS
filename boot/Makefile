@@ -14,6 +14,6 @@ boot.bin: $(BOOTASM)
 .PHONY: clean
 
 clean:
-	rm *.o -f
-	rm *.bin -f
-	rm kernel.tmp -f
+	rm -f *.o
+	rm -f *.bin
+	rm -f kernel.tmp

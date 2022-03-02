@@ -1,27 +1,28 @@
 # Makefile to create the final OS image
-
+SHELL=/bin/bash
 CAT=cat
 OUTIMG=os.img
-
+MAKE=make
 $(OUTIMG): boot.bin kernel.bin
 	$(CAT) $^ > $(OUTIMG)
+	./fixsize.sh
 
 boot.bin: 
-	mingw32-make -C boot
+	$(MAKE) -C boot
 
 kernel.bin: 
-	mingw32-make -C kernel
+	$(MAKE) -C kernel
 	
 .PHONY: clean
 
 .PHONY: clean-all
 
 clean:
-	mingw32-make -C boot clean
-	mingw32-make -C kernel clean
+	$(MAKE) -C boot clean
+	$(MAKE) -C kernel clean
 	
 clean-all:
-	mingw32-make -C boot clean
-	mingw32-make -C kernel clean
-	rm *.bin -f
-	rm os.img -f
+	$(MAKE) -C boot clean
+	$(MAKE) -C kernel clean
+	rm -f *.bin
+	rm -f os.img

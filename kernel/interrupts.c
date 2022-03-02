@@ -27,5 +27,11 @@ void kybrd_interrupt(struct regs r)
     // Read from keyboard encoder
     kybrd_ctrl_wait_read();
     byte enc_return_code = kybrd_enc_read();
-    kprintn(&vidptr, (const char *)enc_return_code, 1, LIGHTGREY);
+    // TODO: Debug
+    char low, high;
+    nibble_to_hex(enc_return_code & 0x0f, &low);
+    nibble_to_hex((enc_return_code >> 4) & 0x0f, &high); 
+    kprintn(&vidptr, &high, 1, LIGHTGREY);
+    kprintn(&vidptr, &low, 1, LIGHTGREY);
+    //kprintn(&vidptr, (const char *)enc_return_code, 1, LIGHTGREY);
 }

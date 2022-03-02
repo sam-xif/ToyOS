@@ -1,16 +1,15 @@
 # Makefile to build the kernel
 
 CC=gcc
-CFLAGS=-Wall -m32 -c 
+LOCAL_CFLAGS=-Wall -m32 -c -fleading-underscore 
 ASM=nasm
 
 # Flags used for assembling the kernel
-KASMFLAGS=-f win32
-
+LOCAL_KASMFLAGS=-f elf32
 
 LD=ld
-LDFLAGS=-T link.ld -m i386pe -o
-OBJCOPYFLAGS=-j .text -O binary
+LOCAL_LDFLAGS=-T link.ld -o
+LOCAL_OBJCOPYFLAGS=-j .text -O binary
 OBJCOPY=objcopy
 
 KENTRY=kernel_entry
@@ -19,26 +18,26 @@ KENTRY=kernel_entry
 COBJ=kmain.o gdt.o idt.o interrupts.o kybrd_driver.o
 
 # object files produced by assembly
-ASMOBJ=$(KENTRY).obj exception_wrappers.obj initialize_pic.obj hardware_int_wrappers.obj utils.obj
+ASMOBJ=$(KENTRY).o exception_wrappers.o initialize_pic.o hardware_int_wrappers.o utils.o
 
 kernel.bin: $(COBJ) $(ASMOBJ) link.ld
-	$(LD) $(LDFLAGS) kernel.tmp $(COBJ) $(ASMOBJ)
-	$(OBJCOPY) $(OBJCOPYFLAGS) kernel.tmp kernel.bin
+	$(LD) $(LOCAL_LDFLAGS) kernel.tmp $(COBJ) $(ASMOBJ)
+	$(OBJCOPY) $(LOCAL_OBJCOPYFLAGS) kernel.tmp kernel.bin
 	cp kernel.bin ../kernel.bin
 
 #$(KENTRY).o: $(KENTRY).asm
 #	$(ASM) $(KASMFLAGS) $(KENTRY).o $(KENTRY).asm
 
-%.obj: %.asm
-	$(ASM) $(KASMFLAGS) $^
-
+%.o: %.asm
+	$(ASM) $(LOCAL_KASMFLAGS) $^
+ 
 %.o: %.c
-	$(CC) $(CFLAGS) $^
+	$(CC) $(LOCAL_CFLAGS) $^
 
 .PHONY: clean
 
 clean:
-	rm *.o -f
-	rm *.obj -f
-	rm *.bin -f
-	rm kernel.tmp -f
+	rm -f *.o
+	rm -f *.obj 
+	rm -f *.bin
+	rm -f kernel.tmp

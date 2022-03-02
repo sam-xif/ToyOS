@@ -62,29 +62,51 @@ void kybrd_enable()
 int kybrd_get_scanset()
 {
     kybrd_ctrl_wait_write();
-    writeport(KYBRD_CTRL_PORT, 0xF0);
+    writeport(KYBRD_CTRL_PORT, 0xF0); // this is the set scanset command??
+    kybrd_ctrl_wait_write();
+    writeport(KYBRD_ENC_PORT, 0x00);
     
+    kybrd_ctrl_wait_read();
     byte cmd_response = readport(KYBRD_ENC_PORT);
     if (cmd_response == 0xFA) {
         kprint(&vidptr, "GET SCANSET COMMAND ACKNOWLEDGED", LIGHTGREY);
         knewline(&vidptr);
+        return 1;
     }
-    
+    return -2;
+/*
+    kybrd_ctrl_wait_write();
+    writeport(KYBRD_ENC_PORT, 0x02);
+
+    kybrd_ctrl_wait_read();
+    byte scanset_response = readport(KYBRD_ENC_PORT);
+
+    if (scanset_response == 0xFA) {
+        kprint(&vidptr, "SCANSET SET", LIGHTGREY);
+        knewline(&vidptr);
+        return 0x02;
+    } else {
+        return -2;
+    }*/
+   /* 
     kybrd_ctrl_wait_write();
     // Writing Bit 0 outputs the current scan set to port 0x60 (encoder port)
     writeport(KYBRD_ENC_PORT, 0x00);
     
     byte response1 = readport(KYBRD_ENC_PORT);
     // 0xFA is the acknowledged code
-    if (response1 == 0xFA) {
-        kybrd_ctrl_wait_read();
-        return readport(KYBRD_ENC_PORT);
+    while (1) {
+        switch (response1) {
+            case 0xFA: {
+                kybrd_ctrl_wait_read();
+                response1 = readport(KYBRD_ENC_PORT);
+                break;
+            }
+            case 0xFE: {
+                return -1;
+            }
+            default: return response1;
+        }
     }
-    // 0xFE is the resend code
-    else if (response1 == 0xFE) {
-        return -1; // -1 is resend error; TODO: come up with standard error codes
-    }
-    else {
-        return -2; // Unknown code is error -2
-    }
+    */
 }
