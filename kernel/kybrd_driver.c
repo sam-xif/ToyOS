@@ -58,25 +58,59 @@ void kybrd_enable()
     writeport(KYBRD_ENC_PORT, ctrl_cmd_byte);
 }
 
+int kybrd_id()
+{
+    kybrd_ctrl_wait_write();
+    writeport(KYBRD_CTRL_PORT, 0xF2);
+
+}
+
+int kybrd_enable_scanning()
+{
+    kybrd_ctrl_wait_write();
+    writeport(KYBRD_ENC_PORT, 0xF4);
+
+    kybrd_ctrl_wait_read();
+    byte response = readport(KYBRD_ENC_PORT);
+    if (response == 0xFA) {
+        return 1;
+    } else {
+        return -1;
+    }
+}
+
+
+int kybrd_disable_scanning()
+{
+    kybrd_ctrl_wait_write();
+    writeport(KYBRD_ENC_PORT, 0xF5);
+
+    kybrd_ctrl_wait_read();
+    byte response = readport(KYBRD_ENC_PORT);
+    if (response == 0xFA) {
+        return 1;
+    } else {
+        return -1;
+    }
+}
+
 // Gets the current scan set that the keyboard is using 
 int kybrd_get_scanset()
 {
     kybrd_ctrl_wait_write();
-    writeport(KYBRD_CTRL_PORT, 0xF0); // this is the set scanset command??
+    writeport(KYBRD_ENC_PORT, 0xF0); // this is the set scanset command??
+    //kybrd_ctrl_wait_write();
+    //writeport(KYBRD_ENC_PORT, 0x00);
     kybrd_ctrl_wait_write();
-    writeport(KYBRD_ENC_PORT, 0x00);
-    
+    writeport(KYBRD_ENC_PORT, 0x01);
+
+   
     kybrd_ctrl_wait_read();
     byte cmd_response = readport(KYBRD_ENC_PORT);
     if (cmd_response == 0xFA) {
         kprint(&vidptr, "GET SCANSET COMMAND ACKNOWLEDGED", LIGHTGREY);
         knewline(&vidptr);
-        return 1;
     }
-    return -2;
-/*
-    kybrd_ctrl_wait_write();
-    writeport(KYBRD_ENC_PORT, 0x02);
 
     kybrd_ctrl_wait_read();
     byte scanset_response = readport(KYBRD_ENC_PORT);
@@ -84,10 +118,15 @@ int kybrd_get_scanset()
     if (scanset_response == 0xFA) {
         kprint(&vidptr, "SCANSET SET", LIGHTGREY);
         knewline(&vidptr);
-        return 0x02;
+        // TODO: Add another function to set scanset
+        return 0x01;//readport(KYBRD_ENC_PORT);
     } else {
+        char s[2];
+        byte_to_hex(scanset_response, s);
+        kprintn(&vidptr, s, 2, LIGHTGREY);
+        knewline(&vidptr); 
         return -2;
-    }*/
+    }
    /* 
     kybrd_ctrl_wait_write();
     // Writing Bit 0 outputs the current scan set to port 0x60 (encoder port)

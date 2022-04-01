@@ -98,14 +98,22 @@ void kmain(void)
     
     
     // Enable the keyboard and try setting LEDs
-	kybrd_enable();
-    kybrd_set_leds(7);
+   // kybrd_enable();
+//    kybrd_set_leds(7);
     
     const char *getting_scanset_msg = "getting keyboard scanset";
     knewline(&vidptr);
     kprint(&vidptr, getting_scanset_msg, LIGHTGREEN);
     knewline(&vidptr);
-    
+ 
+    if (kybrd_disable_scanning() >= 0) {
+        knewline(&vidptr);
+        kprint(&vidptr, "Disabled scanning?", LIGHTGREEN);
+    } else {
+        knewline(&vidptr);
+        kprint(&vidptr, "Error when trying to disable scanning", LIGHTGREEN);
+    }
+	   
     char scanset_str[2];
     int scanset_byte = kybrd_get_scanset();
     if (scanset_byte >= 0) {
@@ -118,7 +126,16 @@ void kmain(void)
     } else {
         kprint(&vidptr, "Error white getting scanset", LIGHTGREEN);
     }
-	
+
+// TODO: Rennable scanning here
+    knewline(&vidptr);
+    kprint(&vidptr, "enabling kbd", LIGHTGREY);
+    kybrd_enable();
+
+//    knewline(&vidptr);
+//    kprint(&vidptr, "enabling scanning", LIGHTGREY);
+//    kybrd_enable_scanning();
+
 	return;
 }
 
@@ -238,6 +255,29 @@ int nibble_to_hex(byte value, char *str)
         default: return -1;
     }
     return 0;
+}
+
+int hex_to_nibble(char digit)
+{
+    switch (digit) {
+        case '0': return 0;
+        case '1': return 1;
+        case '2': return 2;
+        case '3': return 3;
+        case '4': return 4;
+        case '5': return 5;
+        case '6': return 6;
+        case '7': return 7;
+        case '8': return 8;
+        case '9': return 9;
+        case 'a': case 'A': return 10;
+        case 'b': case 'B': return 11;
+        case 'c': case 'C': return 12;
+        case 'd': case 'D': return 13;
+        case 'e': case 'E': return 14;
+        case 'f': case 'F': return 15;
+        default: return -1;
+    }
 }
 
 /* Converts one byte to its hexadecimal representation */

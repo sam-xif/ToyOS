@@ -8,6 +8,8 @@
 #define KYBRD_CTRL_PORT 0x64
 #define KYBRD_ENC_PORT 0x60
 
+int kybrd_enable_scanning();
+int kybrd_disable_scanning();
 void kybrd_set_leds(byte leds);
 void kybrd_ctrl_wait_write();
 void kybrd_ctrl_wait_read();
