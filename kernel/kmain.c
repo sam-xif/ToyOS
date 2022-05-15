@@ -7,6 +7,8 @@
 #include "idt.h"
 #include "interrupts.h"
 #include "kybrd_driver.h"
+#include "vmem.h"
+#include "physmem.h"
 
 byte *vidptr;
 
@@ -132,11 +134,30 @@ void kmain(void)
     kprint(&vidptr, "enabling kbd", LIGHTGREY);
     kybrd_enable();
 
+
 //    knewline(&vidptr);
 //    kprint(&vidptr, "enabling scanning", LIGHTGREY);
-//    kybrd_enable_scanning();
+    kybrd_enable_scanning();
+    
+    //set_page_table_root(3);
+    //addr_t cr3 = get_page_table_root();
+    //knewline(&vidptr);
+    //print_bytes(&cr3, 4);
 
+    // Initialize physical memory manager
+    phys_init();
 	return;
+}
+
+void print_bytes(void *buf, int num)
+{
+    byte *bytes = (byte *)buf;
+    char str[2];
+    int i;
+    for (i = 0; i < num; i++) {
+        byte_to_hex(bytes[i], str);
+        kprintn(&vidptr, str, 2, LIGHTGREY);
+    }
 }
 
 /* Clear video memory with space characters */

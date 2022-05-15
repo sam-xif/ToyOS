@@ -16,5 +16,6 @@ void kybrd_ctrl_wait_read();
 byte kybrd_enc_read();
 void kybrd_enable();
 int kybrd_get_scanset();
+int kybrd_issue_command(byte command);
 
 #endif /* __KYBRD_DRIVER_H */

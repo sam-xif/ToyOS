@@ -2,7 +2,6 @@
 *  link.ld
 */
 OUTPUT_FORMAT(elf32-i386)
-ENTRY(start)
 phys = 0x9000;
 SECTIONS
 {

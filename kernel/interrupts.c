@@ -4,6 +4,7 @@
 
 #include "kmain.h"
 #include "interrupts.h"
+#include "kybrd_driver.h"
 
 void divide_by_zero_fault(struct regs r, unsigned int eip, unsigned int cs, unsigned int eflags)
 {
@@ -33,5 +34,7 @@ void kybrd_interrupt(struct regs r)
     nibble_to_hex((enc_return_code >> 4) & 0x0f, &high); 
     kprintn(&vidptr, &high, 1, LIGHTGREY);
     kprintn(&vidptr, &low, 1, LIGHTGREY);
-    //kprintn(&vidptr, (const char *)enc_return_code, 1, LIGHTGREY);
+
+    // TODO: Need to write the ascii value of the key pressed to some input buffer
+
 }

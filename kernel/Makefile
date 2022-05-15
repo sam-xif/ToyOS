@@ -1,24 +1,24 @@
 # Makefile to build the kernel
 
 CC=gcc
-LOCAL_CFLAGS=-Wall -m32 -c -fleading-underscore 
+LOCAL_CFLAGS=-Wall -m32 -c -fleading-underscore -nostdlib -nodefaultlibs 
 ASM=nasm
 
 # Flags used for assembling the kernel
 LOCAL_KASMFLAGS=-f elf32
 
 LD=ld
-LOCAL_LDFLAGS=-T link.ld -o
+LOCAL_LDFLAGS=-nostdlib -T link.ld -o
 LOCAL_OBJCOPYFLAGS=-j .text -O binary
 OBJCOPY=objcopy
 
 KENTRY=kernel_entry
 
 # Object files produced by c source
-COBJ=kmain.o gdt.o idt.o interrupts.o kybrd_driver.o
+COBJ=kmain.o gdt.o idt.o interrupts.o kybrd_driver.o physmem.o
 
 # object files produced by assembly
-ASMOBJ=$(KENTRY).o exception_wrappers.o initialize_pic.o hardware_int_wrappers.o utils.o
+ASMOBJ=$(KENTRY).o exception_wrappers.o initialize_pic.o hardware_int_wrappers.o utils.o vmem_routines.o
 
 kernel.bin: $(COBJ) $(ASMOBJ) link.ld
 	$(LD) $(LOCAL_LDFLAGS) kernel.tmp $(COBJ) $(ASMOBJ)

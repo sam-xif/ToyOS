@@ -80,6 +80,20 @@ int kybrd_enable_scanning()
 }
 
 
+int kybrd_issue_command(byte command)
+{
+    kybrd_ctrl_wait_write();
+    writeport(KYBRD_ENC_PORT, command);
+
+    kybrd_ctrl_wait_read();
+    byte response = readport(KYBRD_ENC_PORT);
+    if (response == 0xFA) {
+        return 1;
+    } else {
+        return -1;
+    }
+}
+
 int kybrd_disable_scanning()
 {
     kybrd_ctrl_wait_write();
@@ -102,7 +116,7 @@ int kybrd_get_scanset()
     //kybrd_ctrl_wait_write();
     //writeport(KYBRD_ENC_PORT, 0x00);
     kybrd_ctrl_wait_write();
-    writeport(KYBRD_ENC_PORT, 0x01);
+    writeport(KYBRD_ENC_PORT, 0x03);
 
    
     kybrd_ctrl_wait_read();

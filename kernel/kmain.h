@@ -41,6 +41,9 @@ void knewline(byte **vidptr);
 /* Get length of string. Behavior is only defined for null-terminated strings */
 uint32 kstrlen(const char *str); 
 
+// prints bytes as hex
+void print_bytes(void *buf, int num);
+
 /* NOT IMPLEMENTED */
 int itoa(int value, char *str, int base); /* integer to ASCII */
 
